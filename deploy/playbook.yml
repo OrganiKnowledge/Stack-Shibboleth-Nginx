@@ -1,0 +1,14 @@
+- hosts: all
+  become: true
+  gather_facts: no
+  pre_tasks:
+      - name: 'install python2'
+        raw: sudo apt-get -y install python-simplejson
+      - name: gather facts
+        setup:
+
+  roles:
+   - { role: docker,docker_install_compose: true, tag: ['docker']}
+   - { role: testwebsite, tag: ['testwebsite']}
+   - { role: deploy-stack,tag: ['deploy-stack']}
+   

@@ -1,0 +1,42 @@
+version: "3"
+services:
+
+  shibd:
+    image: organiknowledge/shibsp
+    volumes:
+      - sockets:/var/run/shibboleth/
+      - "/var/log/shibboleth/:/var/log/shibboleth/"
+      - "/etc/shibboleth/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml"
+    
+  shibsocket:
+    image: organiknowledge/shibsp
+    volumes:
+      - sockets:/var/run/shibboleth/
+      - "/var/log/supervisor/:/var/log/supervisor/"
+    command: /usr/bin/supervisord -n
+    
+  nginx:
+    image: organiknowledge/nginxshib
+    volumes:
+      - "/var/www/:/var/www/"
+      - "/etc/nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "/etc/nginx/sites-available/:/etc/nginx/sites-available/"
+      - "/etc/nginx/sites-enabled/:/etc/nginx/sites-enabled/"
+      - "/var/log/nginx/:/var/log/nginx/"
+      - sockets:/var/run/shibboleth/
+      - "/etc/nginx/localhost.crt:/etc/nginx/localhost.crt"
+      - "/etc/nginx/localhost.key:/etc/nginx/localhost.key"
+    ports:
+      - 80:80
+      - 443:443
+    
+  shibidp:
+    image: organiknowledge/shibboleth-idp
+    volumes: 
+      - "/vagrant/credentials/:/opt/shibboleth-idp/credentials/"
+      - "/vagrant/idp-conf/:/opt/shibboleth-idp/conf/"
+    ports:
+     - 4443:4443
+     - 8443:8443
+volumes:
+  sockets:

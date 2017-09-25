@@ -1,0 +1,51 @@
+---
+- name: checking apt requirements
+  apt:
+    name: python-pip
+    state: present
+
+- name: checking pip requirements 
+  pip: name={{ item }} state=present
+  with_items:
+    - docker-py
+
+- name: load img shibsp
+  docker_image:
+    name: organiknowledge/shibsp
+    load_path: /vagrant/dockerimgs/OKshibsp.tar
+
+- name: load img shibidp
+  docker_image:
+    name: organiknowledge/shibboleth-idp
+    load_path: /vagrant/dockerimgs/OKshibidp.tar
+
+- name: load img nginxshib
+  docker_image:
+    name: organiknowledge/nginxshib
+    load_path: /vagrant/dockerimgs/OKnginxshib.tar
+
+- name: preparing nginx config
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
+
+- name: preparing shibboleth config
+  template: src=shibboleth2.xml dest=/etc/shibboleth/shibboleth2.xml
+
+- name: preparing local certificate
+  template: src=localhost.crt dest=/etc/nginx/localhost.crt
+
+- name: preparing local key
+  template: src=localhost.key dest=/etc/nginx/localhost.key
+
+- name: Checking Swarm Mode Status
+  command: "docker info"
+  register: "docker_info"
+  changed_when: false
+
+- name: starting swarm mode
+  command: docker swarm init
+  when: "'Swarm: inactive' in docker_info.stdout"
+
+- name: launching the containers
+  command: docker stack deploy -c docker-compose.yml shib
+  args:
+    chdir: /vagrant/

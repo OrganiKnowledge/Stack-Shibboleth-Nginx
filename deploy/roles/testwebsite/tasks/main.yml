@@ -1,0 +1,48 @@
+---
+#installation du site web de test
+
+- name: creation du dossier du site 
+  file:
+   path: /var/www/example.com
+   state: directory
+   mode: 0755
+
+- name: Copie de index.html
+  become: yes
+  template: src=index.html dest=/var/www/index.html
+
+
+#- name: copie du index.html
+#  copy:
+#   src: /vagrant/example/index.html
+#   dest: /var/www/example.com/index.html
+#   remote_src: true
+
+- name: creating site-available directory
+  file:
+   path: /etc/nginx/sites-available
+   state: directory
+   mode: 0755
+
+- name: Copie de la configuration de l'exemple
+  become: yes
+  template: src=example.conf dest=/etc/nginx/sites-available/example.conf
+
+
+#- name: copie de la conf de l'exemple
+#  copy:
+#   src: /vagrant/example/example.conf
+#   dest: /etc/nginx/sites-available/example.conf
+#   remote_src: true
+
+- name: creating site-enabled directory
+  file:
+   path: /etc/nginx/sites-enabled
+   state: directory
+   mode: 0755
+
+- name: création du lien vers site enabled
+  file:
+   src: /etc/nginx/sites-available/example.conf
+   dest: /etc/nginx/sites-enabled/example.conf
+   state: link 

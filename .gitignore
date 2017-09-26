@@ -1,0 +1,13 @@
+deploy/playbook.retry
+deploy/ubuntu-xenial-16.04-cloudimg-console.log
+deploy/dockerimgs/OKshibsp.tar
+deploy/dockerimgs/OKshibidp.tar
+deploy/dockerimgs/OKnginxshib.tar
+deploy/.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory
+deploy/.vagrant/machines/virtualbox/virtualbox/synced_folders
+deploy/.vagrant/machines/virtualbox/virtualbox/private_key
+deploy/.vagrant/machines/virtualbox/virtualbox/index_uuid
+deploy/.vagrant/machines/virtualbox/virtualbox/id
+deploy/.vagrant/machines/virtualbox/virtualbox/creator_uid
+deploy/.vagrant/machines/virtualbox/virtualbox/action_set_name
+deploy/.vagrant/machines/virtualbox/virtualbox/action_provision
